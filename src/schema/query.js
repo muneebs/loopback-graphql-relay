@@ -10,6 +10,7 @@ const {
 const { GraphQLObjectType } = require('graphql');
 const { getType, getConnection } = require('../types/type');
 const { findAll } = require('../db');
+const getRemoteMethods = require('./utils/getRemoteMethods');
 
 /**
  *
@@ -78,12 +79,47 @@ function generateViewer(models) {
 
   return Viewer;
 }
+
+
+function generateModelFields(models) {
+
+  const modelFields = {};
+  _.forEach(models, (model) => {
+
+    const fields = Object.assign({},
+      getRemoteMethods(model, ['get', 'head'])
+    );
+
+    if (_.size(fields) === 0) {
+      return;
+    }
+
+    modelFields[_.upperFirst(model.modelName)] = {
+      resolve: (root, args, context) => ({}),
+      type: new GraphQLObjectType({
+        name: `${model.modelName}Queries`,
+        description: model.modelName,
+        fields
+      })
+    };
+
+  });
+
+  return modelFields;
+}
+
 module.exports = function(models) {
-  return new GraphQLObjectType({
-    name: 'Query',
-    fields: {
+
+  const fields = Object.assign({},
+    {
       node: getType('node'),
       viewer: generateViewer(models)
-    }
+    },
+    generateModelFields(models)
+  );
+
+  return new GraphQLObjectType({
+    name: 'Query',
+    fields
   });
 };

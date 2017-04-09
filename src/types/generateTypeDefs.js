@@ -6,7 +6,7 @@ const {
 } = require('graphql-relay');
 
 const GeoPointTypeDefs = require('./GeoPoint');
-const { findRelated } = require('../db');
+const { findRelatedOne, findRelatedMany } = require('../db');
 
 /** * Loopback Types - GraphQL types
         any - JSON
@@ -153,6 +153,24 @@ function mapProperty(model, property, modelName, propertyName, isInputType = fal
   }
 }
 
+function isManyRelation(type) {
+  switch (type) {
+    case 'hasOne':
+    case 'embedsOne':
+    case 'belongsTo':
+      return false;
+
+    case 'hasMany':
+    case 'embedsMany':
+    case 'referencesMany':
+    case 'hasAndBelongsToMany':
+      return true;
+
+    default:
+      return undefined;
+  }
+}
+
 /**
  * Maps a relationship as a connection property to a given type
  * @param {*} rel
@@ -166,6 +184,7 @@ function mapRelation(rel, modelName, relName) {
       relation: true,
       connection: true,
       relationType: rel.type,
+      isMany: isManyRelation(rel.type),
       embed: rel.embed,
       type: rel.modelTo.modelName,
       args: Object.assign({
@@ -175,7 +194,13 @@ function mapRelation(rel, modelName, relName) {
         },
       }, connectionArgs),
     },
-    resolve: (obj, args, context) => connectionFromPromisedArray(findRelated(rel, obj, args, context), args)
+    resolve: (obj, args, context) => {
+      if (isManyRelation(rel.type) === true) {
+        return connectionFromPromisedArray(findRelatedMany(rel, obj, args, context), args);
+      }
+
+      return findRelatedOne(rel, obj, args, context);
+    }
   };
 }
 

@@ -7,19 +7,9 @@ const {
 } = require('graphql-relay');
 
 const { GraphQLObjectType } = require('graphql');
-const promisify = require('promisify-node');
 
 const { getType } = require('../types/type');
-const { SCALARS } = require('../types/generateTypeDefs');
-
-const exchangeTypes = {
-  any: 'JSON',
-  Any: 'JSON',
-  Number: 'Int',
-  number: 'Int',
-  Object: 'JSON',
-  object: 'JSON'
-};
+const getRemoteMethods = require('./utils/getRemoteMethods');
 
 /**
  * Create basic save and delete methods for all shared models
@@ -32,8 +22,8 @@ function saveAndDeleteMethods(model) {
     return;
   }
 
-  const saveFieldName = `save${model.modelName}`;
-  const deleteFieldName = `delete${model.modelName}`;
+  const saveFieldName = `${_.lowerFirst(model.modelName)}Save`;
+  const deleteFieldName = `${_.lowerFirst(model.modelName)}Delete`;
   const InputModelName = `${model.modelName}Input`;
 
   fields[saveFieldName] = mutationWithClientMutationId({
@@ -65,86 +55,33 @@ function saveAndDeleteMethods(model) {
   return fields;
 }
 
-function addRemoteHooks(model) {
-
-  const hooks = {};
-
-  if (model.sharedClass && model.sharedClass.methods) {
-    model.sharedClass.methods().forEach((method) => {
-      if (method.name.indexOf('Stream') === -1 && method.name.indexOf('invoke') === -1) {
-
-        const acceptingParams = {};
-        let returnType = 'JSON';
-
-        method.accepts.forEach((param) => {
-          let paramType = '';
-          if (typeof param.type === 'object') {
-            paramType = 'JSON';
-          } else if (!SCALARS[param.type.toLowerCase()]) {
-            paramType = `${param.type}Input`;
-          } else {
-            paramType = _.upperFirst(param.type);
-          }
-          if (param.arg) {
-            acceptingParams[param.arg] = {
-              type: getType(exchangeTypes[paramType] || paramType)
-            };
-          }
-        });
-        if (method.returns && method.returns[0]) {
-          if (!SCALARS[method.returns[0].type] && typeof method.returns[0].type !== 'object') {
-            returnType = `${method.returns[0].type}`;
-          } else {
-            returnType = `${_.upperFirst(method.returns[0].type)}`;
-            if (typeof method.returns[0].type === 'object') {
-              returnType = 'JSON';
-            }
-          }
-        }
-
-        const hookName = `${method.name}${model.modelName}`;
-        const type = getType(`${exchangeTypes[returnType] || returnType}`) || getType('JSON');
-
-        hooks[hookName] = mutationWithClientMutationId({
-          name: hookName,
-          meta: { relation: true },
-          inputFields: acceptingParams,
-          outputFields: {
-            obj: {
-              type,
-              resolve: o => o.obj
-            },
-          },
-          mutateAndGetPayload: (args) => {
-            const params = [];
-
-            _.forEach(acceptingParams, (param, name) => {
-              params.push(args[name]);
-            });
-            const wrap = promisify(model[method.name]);
-            return wrap.apply(model, params).then(data => ({ obj: data }));
-          }
-        });
-      }
-    });
-  }
-
-  return hooks;
-}
-
 module.exports = function(models) {
 
-  const fields = {};
+  const modelFields = {};
   _.forEach(models, (model) => {
-    Object.assign(
-      fields,
-      saveAndDeleteMethods(model),
-      addRemoteHooks(model)
+
+    const fields = Object.assign({},
+      getRemoteMethods(model, ['post', 'delete', 'put', 'patch']),
+      saveAndDeleteMethods(model)
     );
+
+    if (_.size(fields) === 0) {
+      return;
+    }
+
+    modelFields[_.upperFirst(model.modelName)] = {
+      resolve: (root, args, context) => ({}),
+      type: new GraphQLObjectType({
+        name: `${model.modelName}Mutations`,
+        description: model.modelName,
+        fields
+      })
+    };
+
   });
 
   return new GraphQLObjectType({
     name: 'Mutation',
-    fields
+    fields: modelFields
   });
 };
