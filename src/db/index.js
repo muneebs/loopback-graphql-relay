@@ -31,12 +31,20 @@ function findOne(model, obj, args, context) {
   return model.findById(id);
 }
 
-function getList(model, obj, args) {
-  return model.find(buildSelector(model, args));
+function getList(model, obj, args, context) {
+  return new Promise((resolve, reject) => {
+    model.checkAccess(context.req.accessToken, '', model.sharedClass.sharedCtor, context, (err, allowed) => {
+      if (allowed) {
+        resolve(model.find(buildSelector(model, args)));
+      } else {
+        reject(new Error('Authorization required'));
+      }
+    });
+  });
 }
 
 function findAll(model, obj, args, context) {
-  return getList(model, obj, args);
+  return getList(model, obj, args, context);
 }
 
 function findRelatedMany(rel, obj, args, context) {
