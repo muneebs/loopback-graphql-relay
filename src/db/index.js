@@ -27,24 +27,26 @@ function buildSelector(model, args) {
 }
 
 function findOne(model, obj, args, context) {
-  const id = obj ? obj[model.getIdName()] : args.id;
+  const id = args.id ? args.id : obj[model.getIdName()];
   return model.findById(id);
 }
 
 function getList(model, obj, args, context) {
   return new Promise((resolve, reject) => {
-    model.checkAccess(context.req.accessToken, '', model.sharedClass.sharedCtor, context, (err, allowed) => {
-      if (allowed) {
-        resolve(model.find(buildSelector(model, args)));
-      } else {
-        reject(new Error('Authorization required'));
-      }
-    });
+    resolve(model.find(buildSelector(model, args)));
   });
 }
 
 function findAll(model, obj, args, context) {
-  return getList(model, obj, args, context);
+  return new Promise((resolve, reject) => {
+    model.checkAccess(context.req.accessToken, obj[model.getIdName()], model.sharedClass.sharedCtor, context, (err, allowed) => {
+      if (allowed) {
+        resolve(getList(model, obj, args, context));
+      } else {
+        reject(new Error('Access denied'));
+      }
+    });
+  });
 }
 
 function findRelatedMany(rel, obj, args, context) {
@@ -61,7 +63,7 @@ function findRelatedOne(rel, obj, args, context) {
   if (_.isArray(obj[rel.keyFrom])) {
     return Promise.resolve([]);
   }
-  args.where = {
+  args = {
     [rel.keyTo]: obj[rel.keyFrom]
   };
   return findOne(rel.modelTo, obj, args, context);
