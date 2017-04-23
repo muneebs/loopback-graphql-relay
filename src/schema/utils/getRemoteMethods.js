@@ -99,14 +99,38 @@ module.exports = function(model, allowedVerbs) {
               resolve: o => o.obj
             },
           },
-          mutateAndGetPayload: (args) => {
+          mutateAndGetPayload: (args, context) => {
             const params = [];
 
-            _.forEach(acceptingParams, (param, name) => {
-              params.push(args[name]);
+            const ctx = Object.assign(context, {
+              model,
+              modelName : method.sharedClass.name,
+              property : method.name,
+              accessType : method.accessType
             });
-            const wrap = promisify(model[method.name]);
-            return wrap.apply(model, params).then(data => ({ obj: data }));
+
+            return Promise.resolve().then(() => {
+              return new Promise((resolve, reject) => {
+                model.checkAccess(context.req.accessToken, args.id, method, ctx, (err, allowed) => {
+                  if (err) {
+                    reject(err);
+                  }
+                  resolve(allowed);
+                });
+              });
+            }).then((result) => {
+              if (result) {
+                _.forEach(acceptingParams, (param, name) => {
+                  params.push(args[name]);
+                });
+                if (method.name === 'login') {
+                  return promisify(model.login(params[0], params[1])).then(data => ({ obj : data }));
+                }
+                const wrap = promisify(model[method.name]);
+                return wrap.apply(model, params).then(data => ({ obj: data }));
+              }
+              throw new Error('Access denied');
+            });
           }
         });
       }

@@ -38,15 +38,7 @@ function getList(model, obj, args, context) {
 }
 
 function findAll(model, obj, args, context) {
-  return new Promise((resolve, reject) => {
-    model.checkAccess(context.req.accessToken, obj[model.getIdName()], model.sharedClass.sharedCtor, context, (err, allowed) => {
-      if (allowed) {
-        resolve(getList(model, obj, args, context));
-      } else {
-        reject(new Error('Access denied'));
-      }
-    });
-  });
+  return getList(model, obj, args, context);
 }
 
 function findRelatedMany(rel, obj, args, context) {
