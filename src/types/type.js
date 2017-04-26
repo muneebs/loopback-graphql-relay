@@ -12,7 +12,7 @@ const {
 
 const { connectionDefinitions } = require('graphql-relay');
 
-const CustomGraphQLDateType = require('graphql-custom-datetype');
+const CustomGraphQLDateType = require('./Date');
 const GraphQLJSON = require('graphql-type-json');
 
 const { getTypeDef } = require('./generateTypeDefs');

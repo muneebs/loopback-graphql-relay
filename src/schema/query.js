@@ -30,6 +30,9 @@ function getRelatedModelFields(models) {
         where: {
           type: getType('JSON')
         },
+        order: {
+          type: getType('JSON')
+        },
       }, connectionArgs),
       type: getConnection(model.modelName),
       resolve: (obj, args, context) => connectionFromPromisedArray(findAll(model, obj, args, context), args)

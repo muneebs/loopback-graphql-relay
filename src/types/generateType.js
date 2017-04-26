@@ -181,7 +181,6 @@ function generateNodeDefinitions(models) {
     (globalId, context, { rootValue }) => {
       const { type, id } = fromGlobalId(globalId);
       return models[type].findById(id).then((obj) => {
-        obj = obj.toJSON();
         obj.__typename = type;
         return Promise.resolve(obj);
       });

@@ -1,20 +1,19 @@
 {
   "ids": {
     "User": 3,
-    "AccessToken": 12,
+    "AccessToken": 1,
     "ACL": 1,
     "RoleMapping": 1,
     "Role": 1,
-    "Note": 18,
-    "Author": 18,
+    "Note": 7,
+    "Author": 3,
     "Reader": 2,
-    "Book": 990,
+    "Book": 2,
     "Customer": 8,
     "Address": 1,
     "EmailAddress": 1,
     "Account": 3,
-    "Order": 6,
-    "Googlemaps": 2
+    "Order": 6
   },
   "models": {
     "User": {
@@ -22,17 +21,6 @@
       "2": "{\"username\":\"naveenmeher\",\"password\":\"$2a$10$tT5y2RfVUdaZvt6iVtDoUeub9WqoqLk40WF5rq4QxQFLJ4bZzzgrO\",\"email\":\"naveenmeher07@gmail.com\",\"id\":2}"
     },
     "AccessToken": {
-      "gf7M01LAsUgVtzZci6WQ8yzxQjvmJIxUqorDhO4oTiuhGmhx8UOHNvrQb6cPMiDj": "{\"id\":\"gf7M01LAsUgVtzZci6WQ8yzxQjvmJIxUqorDhO4oTiuhGmhx8UOHNvrQb6cPMiDj\",\"ttl\":1209600,\"created\":\"2016-12-23T18:44:39.376Z\",\"userId\":2}",
-      "ItiHKIJ0TjZmQbv51dolqR0nzCMwzEFCkyQ5opR5e8rRqtAY6CgdIsyYLVGbFvDa": "{\"id\":\"ItiHKIJ0TjZmQbv51dolqR0nzCMwzEFCkyQ5opR5e8rRqtAY6CgdIsyYLVGbFvDa\",\"ttl\":1209600,\"created\":\"2016-12-23T18:48:24.191Z\",\"userId\":2}",
-      "dGg6GoEWkM9K22Tk8bA37Z9CYNi2ARA7848mVVRFu5xQKp2AtudRM9uHdMX0sbvu": "{\"id\":\"dGg6GoEWkM9K22Tk8bA37Z9CYNi2ARA7848mVVRFu5xQKp2AtudRM9uHdMX0sbvu\",\"ttl\":1209600,\"created\":\"2016-12-23T18:51:35.551Z\",\"userId\":2}",
-      "3Oh9F9DgwNIhlJ5EVGD2HznFvU5C3HKWM9SVbHNHxK66BgVmVk4zcnL2h3oIsLgk": "{\"id\":\"3Oh9F9DgwNIhlJ5EVGD2HznFvU5C3HKWM9SVbHNHxK66BgVmVk4zcnL2h3oIsLgk\",\"ttl\":1209600,\"created\":\"2016-12-23T18:54:50.248Z\",\"userId\":2}",
-      "GEESDn08z0Gv8TDKZQVININZoiCgen45clXeK7p84LHW5HKXwlAAzLEscIBBJfDB": "{\"id\":\"GEESDn08z0Gv8TDKZQVININZoiCgen45clXeK7p84LHW5HKXwlAAzLEscIBBJfDB\",\"ttl\":1209600,\"created\":\"2016-12-23T18:55:30.202Z\",\"userId\":2}",
-      "LDEyTgF7suwf5daeCkYBxGEIdkzhUGHkDPES8sRwZY2zrnGzAzqJJvLGkUYmL90V": "{\"id\":\"LDEyTgF7suwf5daeCkYBxGEIdkzhUGHkDPES8sRwZY2zrnGzAzqJJvLGkUYmL90V\",\"ttl\":1209600,\"created\":\"2016-12-23T18:56:37.981Z\",\"userId\":2}",
-      "XCDmoLAOujA0S5dq2YK4X0yrl2RRB0nJbHKmp3bE3PfCeiawBQmzmTncyINhf97l": "{\"id\":\"XCDmoLAOujA0S5dq2YK4X0yrl2RRB0nJbHKmp3bE3PfCeiawBQmzmTncyINhf97l\",\"ttl\":1209600,\"created\":\"2016-12-23T19:00:56.945Z\",\"userId\":2}",
-      "jWqzIRfGzwGLoD9nySJf2c7kLxyDDSShdsArABFEtgye2i1ronNixKWM69k8EygQ": "{\"id\":\"jWqzIRfGzwGLoD9nySJf2c7kLxyDDSShdsArABFEtgye2i1ronNixKWM69k8EygQ\",\"ttl\":1209600,\"created\":\"2017-01-06T09:08:07.667Z\",\"userId\":2}",
-      "9Ib9evYcDcXfu5e9CSYAGfadUWFIDwV9nP0gwaFuCZ5kzJNzqbQd7qyyRA6MsL6C": "{\"id\":\"9Ib9evYcDcXfu5e9CSYAGfadUWFIDwV9nP0gwaFuCZ5kzJNzqbQd7qyyRA6MsL6C\",\"ttl\":1209600,\"created\":\"2017-01-06T09:15:24.729Z\",\"userId\":2}",
-      "Lyu5TIh2AEBZtr3kRDWnw8guFq9P4DwQoL9luQrPSQEkacVlCzpqrZoPoMbcCvDq": "{\"id\":\"Lyu5TIh2AEBZtr3kRDWnw8guFq9P4DwQoL9luQrPSQEkacVlCzpqrZoPoMbcCvDq\",\"ttl\":1209600,\"created\":\"2017-01-06T09:21:57.857Z\",\"userId\":2}",
-      "7BxSdFdgKwmzBnELHJ6bJm18KyVsfa2RfeK27RoxDS7K2wJSjA8QLvpT9nBuIqsA": "{\"id\":\"7BxSdFdgKwmzBnELHJ6bJm18KyVsfa2RfeK27RoxDS7K2wJSjA8QLvpT9nBuIqsA\",\"ttl\":1209600,\"created\":\"2017-01-06T09:26:03.303Z\",\"userId\":2}"
     },
     "ACL": {},
     "RoleMapping": {},
@@ -43,45 +31,16 @@
       "3": "{\"title\":\"A room with a View\",\"authorId\":3,\"id\":3}",
       "4": "{\"title\":\"The Bluest Eye\",\"authorId\":5,\"id\":4}",
       "5": "{\"title\":\"Of Mice and Men\",\"Genre\":\"HUMOR\",\"authorId\":4,\"id\":5}",
-      "6": "{\"title\":\"Love and Prejudice\",\"authorId\":8,\"Genre\":\"ROMANCE\",\"id\":6}",
-      "7": "{\"title\":\"Heckelbery Finn\",\"content\":{\"body\":\"Heckelbery Finn\",\"footer\":\"The end\"},\"authorId\":8,\"id\":7}",
-      "8": "{\"title\":\"Heckelbery Finn\",\"content\":{\"body\":\"Heckelbery Finn\",\"footer\":\"The end\"},\"authorId\":8,\"id\":8}",
-      "9": "{\"title\":\"Heckelbery Finn\",\"content\":{\"body\":\"Heckelbery Finn\",\"footer\":\"The end\"},\"authorId\":8,\"id\":9}",
-      "10": "{\"title\":\"Heckelbery Finn\",\"content\":{\"body\":\"Heckelbery Finn\",\"footer\":\"The end\"},\"authorId\":8,\"id\":10}",
-      "11": "{\"title\":\"Heckelbery Finn\",\"content\":{\"body\":\"Heckelbery Finn\",\"footer\":\"The end\"},\"authorId\":8,\"id\":11}",
-      "12": "{\"title\":\"Heckelbery Finn\",\"content\":{\"body\":\"Heckelbery Finn\",\"footer\":\"The end\"},\"authorId\":8,\"id\":12}",
-      "13": "{\"title\":\"Heckelbery Finn\",\"content\":{\"body\":\"Heckelbery Finn\",\"footer\":\"The end\"},\"authorId\":8,\"id\":13}",
-      "14": "{\"title\":\"Heckelbery Finn\",\"content\":{\"body\":\"Heckelbery Finn\",\"footer\":\"The end\"},\"authorId\":8,\"id\":14}",
-      "15": "{\"title\":\"Heckelbery Finn\",\"content\":{\"body\":\"Heckelbery Finn\",\"footer\":\"The end\"},\"authorId\":8,\"id\":15}",
-      "16": "{\"title\":\"Heckelbery Finn\",\"content\":{\"body\":\"Heckelbery Finn\",\"footer\":\"The end\"},\"authorId\":8,\"id\":16}",
-      "17": "{\"title\":\"Heckelbery Finn\",\"content\":{\"body\":\"Heckelbery Finn\",\"footer\":\"The end\"},\"authorId\":8,\"id\":17}"
+      "6": "{\"title\":\"Love and Prejudice\",\"authorId\":8,\"Genre\":\"ROMANCE\",\"id\":6}"
     },
     "Author": {
-      "3": "{\"first_name\":\"Virginia\",\"last_name\":\"Wolf\",\"birth_date\":\"2016-10-12T00:00:00.000Z\",\"id\":3}",
-      "5": "{\"first_name\":\"Tony\",\"last_name\":\"Morrison\",\"birth_date\":\"1943-12-31T22:00:00.000Z\",\"id\":5}",
-      "6": "{\"first_name\":\"Virginia\",\"last_name\":\"Wolf\",\"birth_date\":\"2016-10-15T08:54:15.889Z\",\"id\":6}",
-      "7": "{\"first_name\":\"Mark\",\"last_name\":\"Twain\",\"birth_date\":\"1789-10-15T00:00:00.000Z\",\"id\":7,\"friendIds\":[8,6]}",
-      "8": "{\"first_name\":\"Jane\",\"last_name\":\"Austin\",\"birth_date\":\"1883-10-15T00:00:00.000Z\",\"id\":8,\"friendIds\":[5,7]}",
-      "9": "{\"first_name\":\"Virginia\",\"last_name\":\"Wolf\",\"birth_date\":\"2016-12-12T10:32:08.391Z\",\"friendIds\":[],\"id\":9}",
-      "10": "{\"first_name\":\"Virginia\",\"last_name\":\"Wolf\",\"birth_date\":\"2016-12-23T18:06:40.871Z\",\"friendIds\":[],\"id\":10}",
-      "11": "{\"first_name\":\"Virginia\",\"last_name\":\"Wolf\",\"birth_date\":\"2016-12-23T18:51:35.173Z\",\"friendIds\":[],\"id\":11}",
-      "12": "{\"first_name\":\"Virginia\",\"last_name\":\"Wolf\",\"birth_date\":\"2016-12-23T18:54:49.866Z\",\"friendIds\":[],\"id\":12}",
-      "13": "{\"first_name\":\"Virginia\",\"last_name\":\"Wolf\",\"birth_date\":\"2016-12-23T18:55:29.815Z\",\"friendIds\":[],\"id\":13}",
-      "14": "{\"first_name\":\"Virginia\",\"last_name\":\"Wolf\",\"birth_date\":\"2016-12-23T18:56:37.576Z\",\"friendIds\":[],\"id\":14}",
-      "15": "{\"first_name\":\"Virginia\",\"last_name\":\"Wolf\",\"birth_date\":\"2016-12-23T19:00:56.568Z\",\"friendIds\":[],\"id\":15}",
-      "16": "{\"first_name\":\"Virginia\",\"last_name\":\"Wolf\",\"birth_date\":\"2017-01-06T09:21:57.456Z\",\"friendIds\":[],\"id\":16}",
-      "17": "{\"first_name\":\"Virginia\",\"last_name\":\"Wolf\",\"birth_date\":\"2017-01-06T09:26:02.901Z\",\"friendIds\":[],\"id\":17}"
+      "1": "{\"first_name\":\"Jane\",\"last_name\":\"Austin\",\"birth_date\":\"1883-10-15T00:00:00.000Z\",\"id\":8,\"friendIds\":[5,7]}"
     },
     "Reader": {
       "1": "{\"name\":\"Reader 1\",\"id\":1}"
     },
     "Book": {
-      "1": "{\"name\":\"Book 1\",\"links\":[{\"id\":1,\"name\":\"Author 1\",\"notes\":\"Note 1\",\"linkedId\":1,\"linkedType\":\"Author\"},{\"id\":2,\"name\":\"Reader 1\",\"notes\":\"Note 2\",\"linkedId\":1,\"linkedType\":\"Reader\"}],\"id\":1}",
-      "2": "{\"links\":[],\"id\":2}",
-      "87": "{\"name\":\"test\",\"id\":87}",
-      "123": "{\"name\":\"test\",\"id\":123}",
-      "456": "{\"name\":\"what\",\"id\":456}",
-      "987": "{\"name\":\"test\",\"id\":987}"
+      "1": "{\"name\":\"Book 1\",\"links\":[{\"id\":1,\"name\":\"Author 1\",\"notes\":\"Note 1\",\"linkedId\":1,\"linkedType\":\"Author\"},{\"id\":2,\"name\":\"Reader 1\",\"notes\":\"Note 2\",\"linkedId\":1,\"linkedType\":\"Reader\"}],\"id\":1}"
     },
     "Order": {
       "1": "{\"date\":\"2014-12-31T18:30:00.000Z\",\"description\":\"First order by Customer A\",\"customerId\":1,\"id\":1}",
@@ -104,9 +63,6 @@
     "Account": {
       "1": "{\"name\":\"Checking\",\"balance\":5000,\"id\":1}",
       "2": "{\"name\":\"Saving\",\"balance\":2000,\"id\":2}"
-    },
-    "Googlemaps": {
-      "1": "{\"location\":{\"lat\":10,\"lng\":10},\"undefined\":1}"
     }
   }
 }

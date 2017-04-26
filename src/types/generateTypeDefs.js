@@ -192,6 +192,10 @@ function mapRelation(rel, modelName, relName) {
           generated: false,
           type: 'JSON'
         },
+        order: {
+          generated: false,
+          type: 'JSON'
+        },
       }, connectionArgs),
     },
     resolve: (obj, args, context) => {

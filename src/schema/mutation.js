@@ -6,7 +6,7 @@ const {
   mutationWithClientMutationId
 } = require('graphql-relay');
 
-const { GraphQLObjectType } = require('graphql');
+const { GraphQLObjectType, GraphQLNonNull } = require('graphql');
 
 const { getType } = require('../types/type');
 const getRemoteMethods = require('./utils/getRemoteMethods');
@@ -22,8 +22,8 @@ function saveAndDeleteMethods(model) {
     return;
   }
 
-  const saveFieldName = `${_.lowerFirst(model.modelName)}Save`;
-  const deleteFieldName = `${_.lowerFirst(model.modelName)}Delete`;
+  const saveFieldName = `${model.modelName}Save`;
+  const deleteFieldName = `${model.modelName}Delete`;
   const InputModelName = `${model.modelName}Input`;
 
   fields[saveFieldName] = mutationWithClientMutationId({
@@ -39,17 +39,22 @@ function saveAndDeleteMethods(model) {
         resolve: o => o
       },
     },
-    mutateAndGetPayload: ({ obj }) => model.upsert(Object.assign({}, obj))
+    mutateAndGetPayload: ({ obj }) => {
+      // Ugly hack to fix a known loopback issue (https://github.com/strongloop/loopback-datasource-juggler/issues/1261)
+      obj = JSON.parse(JSON.stringify(obj));
+
+      return model.upsert(obj);
+    }
   });
 
   fields[deleteFieldName] = mutationWithClientMutationId({
     name: deleteFieldName,
     inputFields: {
-      obj: {
-        type: getType(InputModelName)
+      id: {
+        type: new GraphQLNonNull(getType('ID'))
       },
     },
-    mutateAndGetPayload: ({ obj }) => model.findById(obj.id).then(instance => instance.destroy())
+    mutateAndGetPayload: ({ id }) => model.destroyById(id)
   });
 
   return fields;

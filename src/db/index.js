@@ -2,53 +2,33 @@
 
 const _ = require('lodash');
 
-function buildSelector(model, args) {
-  const selector = {
-    where: args.where || {}
-  };
-  const begin = args.after;
-  const end = args.before;
-
-  selector.skip = args.first - args.last || 0;
-  selector.limit = args.last || args.first;
-
-  if (model.getIdName && model.getIdName()) {
-    selector.order = model.getIdName() + (end ? ' DESC' : ' ASC');
-    if (begin) {
-      selector.where[model.getIdName()] = selector[model.getIdName()] || {};
-      selector.where[model.getIdName()].gt = begin;
-    }
-    if (end) {
-      selector.where[model.getIdName()] = selector[model.getIdName()] || {};
-      selector.where[model.getIdName()].lt = end;
-    }
-  }
-  return selector;
-}
-
 function findOne(model, obj, args, context) {
-  const id = args.id ? args.id : obj[model.getIdName()];
+  const id = obj ? obj[model.getIdName()] : args.id;
   return model.findById(id);
 }
 
-function getList(model, obj, args, context) {
-  return new Promise((resolve, reject) => {
-    resolve(model.find(buildSelector(model, args)));
-  });
+function getList(model, obj, args) {
+  return model.find(args);
 }
 
 function findAll(model, obj, args, context) {
-  return getList(model, obj, args, context);
+  return getList(model, obj, args);
 }
 
 function findRelatedMany(rel, obj, args, context) {
   if (_.isArray(obj[rel.keyFrom])) {
     return Promise.resolve([]);
   }
-  args.where = {
-    [rel.keyTo]: obj[rel.keyFrom]
-  };
-  return findAll(rel.modelTo, obj, args, context);
+
+  return obj[rel.name](args);
+
+  // const where = {
+  //   [rel.keyTo]: obj[rel.keyFrom]
+  // };
+
+  // args.where = (args.where) ? Object.assign({}, args.where, where) : where;
+
+  // return findAll(rel.modelTo, obj, args, context);
 }
 
 function findRelatedOne(rel, obj, args, context) {
@@ -58,7 +38,7 @@ function findRelatedOne(rel, obj, args, context) {
   args = {
     [rel.keyTo]: obj[rel.keyFrom]
   };
-  return findOne(rel.modelTo, obj, args, context);
+  return findOne(rel.modelTo, null, args, context);
 }
 
 module.exports = {
