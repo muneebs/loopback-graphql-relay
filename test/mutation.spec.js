@@ -146,4 +146,82 @@ describe('Mutations', () => {
             });
   });
 
+  describe('Mutations with ACL constraints', () => {
+    it('should allow any authenticated user to create a new site', () => {
+      const query = gql `
+      mutation createSite($siteInput:SiteCreateInput!) {
+        Site{
+          SiteCreate(input:$siteInput) {
+            obj {
+              id
+              name
+            }
+          }
+        }
+      }
+      `;
+      const variables = {
+        siteInput: {
+          data: {
+            name:'test',
+            active:true,
+            location:{
+              lat:10,
+              lng:10
+            }
+          }
+        }
+      };
+      return chai.request(server)
+      .post('/graphql')
+      .set('Authorization', '6NJWVfqaWHjgcv3mmuWarSVuUic8WzFSutftH0mADLCZaZeuLlSJYbaHAVC6D3gw')
+      .send({
+        query,
+        variables
+      })
+      .then((res) => {
+        expect(res).to.have.status(200);
+        expect(res).to.have.deep.property('body.data.Site.SiteCreate.obj.id');
+      });
+    });
+
+    it('should not allow guest users to create new sites', () => {
+      const query = gql `
+      mutation createSite($siteInput:SiteCreateInput!) {
+        Site{
+          SiteCreate(input:$siteInput) {
+            obj {
+              id
+              name
+            }
+          }
+        }
+      }
+      `;
+      const variables = {
+        siteInput: {
+          data: {
+            name:'test',
+            active:true,
+            location:{
+              lat:10,
+              lng:10
+            }
+          }
+        }
+      };
+      return chai.request(server)
+      .post('/graphql')
+      .send({
+        query,
+        variables
+      })
+      .then((res) => {
+        expect(res).to.have.status(200);
+        const errors = res.body.errors;
+        expect(errors.length).to.equal(1);
+        expect(errors[0].message).to.equal('Access denied');
+      });
+    });
+  });
 });

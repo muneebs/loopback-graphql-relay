@@ -20,6 +20,7 @@ describe('Queries', () => {
                 sites(first: 1) {
                   edges {
                     node {
+                      id
                       name
                       owner {
                         username
@@ -270,5 +271,59 @@ describe('Queries', () => {
     });
 
 
+  });
+
+  describe('Queries with ACL constraints', () => {
+    it('should allow access to findById to the owner of the resource', () => {
+      const query = gql `
+      {
+        Site{
+          SiteFindById(id:1) {
+            id
+            name
+          }
+        }
+      }
+      `;
+      return chai.request(server)
+      .post('/graphql')
+      .set('Authorization', '6NJWVfqaWHjgcv3mmuWarSVuUic8WzFSutftH0mADLCZaZeuLlSJYbaHAVC6D3gw')
+      .send({
+        query
+      })
+      .then((res) => {
+        expect(res).to.have.status(200);
+        const data = res.body.data;
+        expect(data.Site.SiteFindById.id).to.equal('U2l0ZTox');
+      });
+    });
+
+    it('should deny access to findAll sites', () => {
+      const query = gql `
+        {
+          Site{
+            SiteFind{
+              edges{
+                node{
+                  id
+                  name
+                }
+              }
+            }
+          }
+        }`;
+      return chai.request(server)
+      .post('/graphql')
+      .set('Authorization', '6NJWVfqaWHjgcv3mmuWarSVuUic8WzFSutftH0mADLCZaZeuLlSJYbaHAVC6D3gw')
+      .send({
+        query
+      })
+      .then((res) => {
+        expect(res).to.have.status(200);
+        const errors = res.body.errors;
+        expect(errors.length).to.equal(1);
+        expect(errors[0].message).to.equal('Access denied');
+      });
+    });
   });
 });

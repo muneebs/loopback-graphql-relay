@@ -37,16 +37,35 @@ module.exports = function getRemoteMethodQueries(model) {
           resolve: (__, args, context, info) => {
             const params = [];
 
-            _.forEach(acceptingParams, (param, name) => {
-              params.push(args[name]);
+            const ctx = Object.assign(context, {
+              model,
+              modelName : method.sharedClass.name,
+              property : method.name,
+              accessType : method.accessType
             });
-            const wrap = promisify(model[method.name]);
 
-            if (typeObj.list) {
-              return connectionFromPromisedArray(wrap.apply(model, params), args, model);
-            }
+            return Promise.resolve().then(() => new Promise((resolve, reject) => {
+              model.checkAccess(context.req.accessToken, args.id, method, ctx, (err, allowed) => {
+                if (err) {
+                  reject(err);
+                }
+                resolve(allowed);
+              });
+            })).then((result) => {
+              if (result) {
+                _.forEach(acceptingParams, (param, name) => {
+                  params.push(args[name]);
+                });
+                const wrap = promisify(model[method.name]);
 
-            return wrap.apply(model, params);
+                if (typeObj.list) {
+                  return connectionFromPromisedArray(wrap.apply(model, params), args, model);
+                }
+
+                return wrap.apply(model, params);
+              }
+              return Promise.reject('Access denied');
+            });
           }
         };
       }
