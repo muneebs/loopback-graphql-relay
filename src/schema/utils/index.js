@@ -131,10 +131,36 @@ function getRemoteMethodQueryName(model, method) {
   return `${model.modelName}${_.upperFirst(method.name)}`;
 }
 
+/**
+ * Check if the given access token can invoke the method
+ * @param {*} args
+ * @param {*} method
+ * @param {*} model
+ * @param {*} context
+ * @return {Promise}
+ */
+function checkAccess(args, method, model, context) {
+  const ctx = Object.assign(context, {
+    model,
+    modelName : method.sharedClass.name,
+    property : method.name,
+    accessType : method.accessType
+  });
+  return Promise.resolve().then(() => new Promise((resolve, reject) => {
+    model.checkAccess(context.req.accessToken, args.id, method, ctx, (err, allowed) => {
+      if (err) {
+        reject(err);
+      }
+      resolve(allowed);
+    });
+  }));
+}
+
 module.exports = {
   exchangeTypes,
   isRemoteMethodAllowed,
   getRemoteMethodInput,
   getRemoteMethodOutput,
-  getRemoteMethodQueryName
+  getRemoteMethodQueryName,
+  checkAccess
 };

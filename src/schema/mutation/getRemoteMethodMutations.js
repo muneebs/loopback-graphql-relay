@@ -48,21 +48,7 @@ module.exports = function getRemoteMethodMutations(model) {
           mutateAndGetPayload: (args, context) => {
             const params = [];
 
-            const ctx = Object.assign(context, {
-              model,
-              modelName : method.sharedClass.name,
-              property : method.name,
-              accessType : method.accessType
-            });
-
-            return Promise.resolve().then(() => new Promise((resolve, reject) => {
-              model.checkAccess(context.req.accessToken, args.id, method, ctx, (err, allowed) => {
-                if (err) {
-                  reject(err);
-                }
-                resolve(allowed);
-              });
-            })).then((result) => {
+            return utils.checkAccess(args, method, model, context).then((result) => {
               if (result) {
                 _.forEach(acceptingParams, (param, name) => {
                   params.push(args[name]);
